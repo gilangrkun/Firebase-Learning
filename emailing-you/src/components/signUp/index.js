@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import { compose } from "recompose";
+import { NotificationManager } from "react-notifications";
 
 import { withFirebase } from "../firebase";
 
@@ -42,8 +43,12 @@ class SignUpFormBase extends Component {
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
         console.log("Success\n", authUser);
+        this.createNotification("success", "New account created successfully");
+        this.createNotification("info", " Please, log in to continue");
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.SIGN_IN);
+        setTimeout(() => {
+          this.props.history.push(ROUTES.SIGN_IN);
+        }, 4000);
       })
       .catch((error) => {
         this.setState({ error });
@@ -344,6 +349,31 @@ class SignUpFormBase extends Component {
       </div>
     );
   }
+
+  createNotification = (type, message) => {
+    switch (type) {
+      case "info":
+        NotificationManager.info(message, "FYI", 4000);
+        break;
+      case "success":
+        NotificationManager.success(message, "Success", 4000);
+        break;
+      case "warning":
+        NotificationManager.warning(message, "Warning", 4000);
+        break;
+      case "error":
+        NotificationManager.error(message, "Error", 5000, () => {
+          alert("callback");
+        });
+        break;
+      default:
+        NotificationManager.error(
+          "So sorry, I don't know what happened :(",
+          "Error",
+          4000
+        );
+    }
+  };
 }
 
 const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);

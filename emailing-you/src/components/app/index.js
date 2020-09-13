@@ -11,6 +11,8 @@ import HomePage from "../home";
 import AccountPage from "../account";
 import AdminPage from "../admin";
 
+import { NotificationContainer } from "react-notifications";
+import "react-notifications/lib/notifications.css";
 import * as ROUTES from "../../constants/routes";
 
 class App extends Component {
@@ -68,6 +70,7 @@ class App extends Component {
               </p>
             </div>
           </div>
+          <NotificationContainer />
         </div>
       </Router>
     );
